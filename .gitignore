@@ -1,0 +1,62 @@
+# ---------------------------------------------------------------
+# Data
+# The Criteo file is 311MB. GitHub rejects any single file over
+# 100MB, and git history is permanent, so a single accidental
+# commit means rebuilding the repo. See README for the download.
+# ---------------------------------------------------------------
+Data/
+*.csv
+*.csv.gz
+*.parquet
+*.feather
+
+# ---------------------------------------------------------------
+# Jupyter
+# ---------------------------------------------------------------
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+*-checkpoint.ipynb
+
+# ---------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+.python-version
+
+# ---------------------------------------------------------------
+# Model artefacts and scratch output
+# ---------------------------------------------------------------
+*.pkl
+*.joblib
+*.txt.model
+scratch/
+tmp/
+
+# ---------------------------------------------------------------
+# Working notes, kept local
+# The annotated notebooks and step instruction files were written
+# for me, not for a reader.
+# ---------------------------------------------------------------
+*_annotated.ipynb
+notes/
+step*_v*.md
+
+# ---------------------------------------------------------------
+# Editors
+# ---------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+
+# ---------------------------------------------------------------
+# OS
+# ---------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
