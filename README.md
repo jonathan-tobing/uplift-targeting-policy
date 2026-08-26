@@ -95,6 +95,10 @@ At the highest price uplift ranking won all five, by 242 visit-equivalents out o
 
 The pattern is explained by where the two curves cross. Uplift ranking is ahead in roughly the top 22% of the list and behind through the middle. Higher cost means a smaller pool, which lands in uplift ranking's territory.
 
+![Profit by pool size under a flat fee](figures/profit_flat_fee.png)
+
+Profit against how much of the audience you target, at three cost levels. The dot marks the best pool size. Blue and green sit almost on top of each other, and which one is ahead depends on where the peak falls. The peak slides from 53% to 22% as targeting gets more expensive.
+
 > A single split gave "response ranking wins by 394 and 579". Both claims dissolved under repetition, and the third claim, which had looked like a 21-visit tie, is the one that survived.
 
 ### 2. Why the two rankings agree so much
@@ -130,6 +134,10 @@ uplift(x) ÷ P(shown an ad | x)
 Fifteen out of fifteen seed-and-price comparisons won by the adjusted ranking. At the highest price the worst of five splits still beat plain uplift ranking by 6,320, which is 24 standard deviations from zero.
 
 Read the bottom row. Plain uplift ranking finishes **behind the naive response ranking**, and the adjusted ranking makes 5.7 times its profit.
+
+![Profit by pool size under per-impression billing](figures/profit_per_impression.png)
+
+The same three advertisers billed per impression rather than per targeted user. Purple is the cost-adjusted ranking. In the right-hand panel, blue (plain uplift ranking) sits below the random line for most of the range while purple peaks at 7,699.
 
 The crossover price varies by split. In two of five, the adjusted ranking was already ahead at the lowest price scanned; in the other three it overtook at 0.015 to 0.045. Above 0.056 it wins every time. A single split would have reported one confident number instead of a range.
 
@@ -250,24 +258,6 @@ Everything in notebook 3 was repeated across five splits, with rankings compared
 
 ---
 
-## What I would flag if you were checking my work
-
-1. **Predicted uplift is shrunk.** It averages 0.007293 against a true average treatment effect of 0.010342, a consequence of the S-learner under-using the treatment feature. Rankings are unaffected; the numbers cannot be quoted as individual uplift estimates.
-
-2. **The experiment is not textbook clean.** Permutation p = 0.000 on covariate balance, with all twelve features beyond their null. Two explanations fit, and anonymised features make them inseparable: randomisation at a coarser unit than the row, or features measured during the campaign. The propensity AUC of 0.509 caps how much either can matter.
-
-3. **The T-learner's control model carries 1.99% relative level error** against the treated model's 0.57%, because it trains on a fifth of the data. Uplift is around 0.010, so that error is 7.6% of the quantity being estimated. This is why the S-learner wins.
-
-4. **Costs are a ratio, not a currency.** The three levels were chosen to bracket the average uplift of 0.0103, where the decision is interesting. Nothing here asserts a real advertiser's economics.
-
-5. **The exposure model is used inside the dataset it was fitted on.** No claim is made that it transfers to another advertiser or period.
-
-6. **Conversion is reported, not modelled**, for the reasons in the noise floor section.
-
-7. **Dividing by exposure probability was tested for stability.** A floor of 0.005 was originally applied and then removed: it sat above the median predicted exposure, flattened 55% of the audience, and performed worse on held-out data at every level tried. The final guard of 1e-06 is reached by zero users. The sensitivity test remains in notebook 3.
-
----
-
 ## Repository
 
 ```
@@ -275,11 +265,26 @@ Code/
     01_data_check.ipynb        Validation, noise floor, experiment integrity
     02_uplift_models.ipynb     Two estimators, calibration, Qini evaluation
     03_targeting_policy.ipynb  Targeting rules, profit, sleeping dogs
+figures/                       Charts used in this README
 Data/                          Not in the repo. See below
 requirements.txt
 ```
 
 Each notebook is standalone and loads the data itself. They read as a sequence, and each header states what it inherits from the one before.
+
+---
+
+## What I would flag if you were checking my work
+
+1. Predicted uplift is shrunk by about 30%, averaging 0.007293 against a true average treatment effect of 0.010342, because the S-learner under-used the treatment feature. Rankings are unaffected, but the numbers should not be quoted as individual uplift estimates.
+
+2. The experiment is not textbook clean. Permutation testing put the covariate imbalance at p = 0.000 with all twelve features beyond their null, and the two candidate explanations, coarser-than-row randomisation or features measured during the campaign, cannot be separated with anonymised features. The propensity AUC of 0.509 caps how much either can matter.
+
+3. The T-learner's control model carries 1.99% relative level error against the treated model's 0.57%, because it trains on a fifth of the data. Uplift is around 0.010, so that error is 7.6% of the quantity being estimated, and it is why the S-learner wins.
+
+4. Costs are a ratio, not a currency. The three levels bracket the average uplift of 0.0103, which is where the decision is interesting; nothing here asserts a real advertiser's economics.
+
+5. Dividing by exposure probability was tested for stability. A floor of 0.005 was applied and then removed after it proved to sit above the median predicted exposure and to perform worse on held-out data at every level tried; the final guard of 1e-06 is reached by zero users, and the sensitivity test remains in notebook 3.
 
 ---
 
