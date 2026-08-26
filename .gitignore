@@ -60,3 +60,5 @@ step*_v*.md
 .DS_Store
 Thumbs.db
 desktop.ini
+
+test-clone/
